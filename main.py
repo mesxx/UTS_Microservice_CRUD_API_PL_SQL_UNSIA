@@ -63,3 +63,19 @@ async def update_user(user_id: int, new_user: User, db: Session = Depends(get_db
     if updated_user:
         return {"data": updated_user}
     raise HTTPException(status_code=404, detail="User not found")
+
+# Delete user by ID
+@app.delete("/user/{user_id}")
+async def delete_user(user_id: int, db: Session = Depends(get_db)):
+    success = crud.delete_user(db, user_id)
+    if success:
+        return {"message": "User deleted successfully"}
+    raise HTTPException(status_code=404, detail="User not found")
+
+# Read user by ID
+@app.get("/user/{user_id}")
+async def read_user(user_id: int, db: Session = Depends(get_db)):
+    user = crud.get_user_by_id(db, user_id)
+    if user:
+        return {"data": user}
+    raise HTTPException(status_code=404, detail="User not found")

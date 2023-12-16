@@ -62,3 +62,27 @@ def update_user(db: Session, user_id: int, new_username: str, new_password: str)
         print(f"Error updating user: {e}")
         db.rollback()
         return None
+
+# Delete user by ID
+def delete_user(db: Session, user_id: int):
+    try:
+        user = db.query(models.User).filter(models.User.id == user_id).first()
+        if user:
+            db.delete(user)
+            db.commit()
+            return True  # Deletion successful
+        return False  # User not found
+    except SQLAlchemyError as e:
+        print(f"Error deleting user: {e}")
+        db.rollback()
+        return False
+
+
+# Read user by ID
+def get_user_by_id(db: Session, user_id: int):
+    try:
+        user = db.query(models.User).filter(models.User.id == user_id).first()
+        return user
+    except SQLAlchemyError as e:
+        print(f"Error getting user by ID: {e}")
+        return None
