@@ -6,7 +6,6 @@ from pydantic import BaseModel
 import crud, models, middleware
 from database import SessionLocal, engine
 
-
 models.Base.metadata.create_all(bind=engine)
 
 
@@ -56,3 +55,11 @@ async def login_user(user: User, db: Session = Depends(get_db)):
 async def get_users(current_user: Annotated[str, Depends(middleware.verify_user)], db: Session = Depends(get_db)):
     users = crud.get_users(db)
     return {"signed_user":current_user, "data": users}
+
+# Update user by ID
+@app.put("/user/{user_id}")
+async def update_user(user_id: int, new_user: User, db: Session = Depends(get_db)):
+    updated_user = crud.update_user(db, user_id, new_user.username, new_user.password)
+    if updated_user:
+        return {"data": updated_user}
+    raise HTTPException(status_code=404, detail="User not found")

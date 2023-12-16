@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 from passlib.context import CryptContext
 from jose import jwt
-
+from sqlalchemy.exc import SQLAlchemyError
 import models
 
 
@@ -44,3 +44,21 @@ def verify_password(plain_password: str, hashed_password: str):
 def get_token(id: int, username:str):
     encoded_jwt = jwt.encode({"id":id, "username":username}, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
+
+# Update user by ID
+def update_user(db: Session, user_id: int, new_username: str, new_password: str):
+    try:
+        user = db.query(models.User).filter(models.User.id == user_id).first()
+        if user:
+            # Update username and/or password
+            user.username = new_username
+            user.password = pwd_context.hash(new_password) if new_password else user.password
+
+            db.commit()
+            db.refresh(user)
+            return user
+        return None  # User not found
+    except SQLAlchemyError as e:
+        print(f"Error updating user: {e}")
+        db.rollback()
+        return None
