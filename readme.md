@@ -5,7 +5,7 @@
 - Anggota 1 </br>
   Nama: M. ICHSAN FAUZAN </br>
   NIM: 220401010153 </br>
-  PIC: structure endpoint, structure file, config database, register, login and getAllUsers and custom middleware
+  PIC: structure endpoint, structure file, config database, register, login, getAllUsers and custom middleware
 
 - Anggota 2 </br>
   Nama: KEVIN SETIAWAN </br>
@@ -34,6 +34,12 @@ Go to the project directory
 
 ```bash
   cd my-project
+```
+
+Create database postgresql
+
+```bash
+  api_uts_pps_1
 ```
 
 Install dependencies
